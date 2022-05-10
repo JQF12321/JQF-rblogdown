@@ -1,0 +1,64 @@
+---
+title: learn R
+author: ''
+date: '2022-05-10'
+slug: []
+categories: []
+tags: []
+---
+
+
+
+<pre class="r"><code>library(pacman)
+p_load(tidyverse,ggalt,tidyquant)</code></pre>
+<pre><code>## 还安装相依关系&#39;RcppRoll&#39;, &#39;padr&#39;, &#39;tsfeatures&#39;, &#39;Quandl&#39;, &#39;riingo&#39;, &#39;alphavantager&#39;, &#39;timetk&#39;</code></pre>
+<pre><code>## Warning: unable to access index for repository http://www.stats.ox.ac.uk/pub/RWin/bin/windows/contrib/4.1:
+##   无法打开URL&#39;http://www.stats.ox.ac.uk/pub/RWin/bin/windows/contrib/4.1/PACKAGES&#39;</code></pre>
+<pre><code>## package &#39;RcppRoll&#39; successfully unpacked and MD5 sums checked
+## package &#39;padr&#39; successfully unpacked and MD5 sums checked
+## package &#39;tsfeatures&#39; successfully unpacked and MD5 sums checked
+## package &#39;Quandl&#39; successfully unpacked and MD5 sums checked
+## package &#39;riingo&#39; successfully unpacked and MD5 sums checked
+## package &#39;alphavantager&#39; successfully unpacked and MD5 sums checked
+## package &#39;timetk&#39; successfully unpacked and MD5 sums checked
+## package &#39;tidyquant&#39; successfully unpacked and MD5 sums checked
+## 
+## The downloaded binary packages are in
+##  C:\Users\jqf\AppData\Local\Temp\RtmpWQiOeW\downloaded_packages</code></pre>
+<pre><code>## 
+## tidyquant installed</code></pre>
+<pre class="r"><code># 数据准备
+mpg_by_class_tbl &lt;- mpg %&gt;% 
+   group_by(class) %&gt;% 
+   summarise(mean_hwy = mean(hwy,na.rm = TRUE)) %&gt;% 
+   mutate(class = fct_reorder(class, mean_hwy))
+# 数据可视化
+g1 &lt;- mpg_by_class_tbl %&gt;% 
+   ggplot(aes(x=mean_hwy, y=class)) +
+   geom_lollipop(
+      horizontal = TRUE,
+      point.colour = &#39;dodgerblue&#39;,
+      point.size = 10,
+      color = &#39;#2c3e50&#39;,
+      size = 1
+   )
+g1 + geom_label(
+      aes(label = str_glue(&quot;Vehicle Class: {toupper(class)}
+                     mpg: {round(mean_hwy)}&quot;)),
+      size = 3,
+      hjust = &#39;outward&#39;,
+      nudge_x = 2) + 
+   expand_limits(x = 45) + 
+   labs(
+      title = &quot;Vehicle Flue Economy lollipop Plot&quot;,
+      x = &quot;Fuel Economy (MPG)&quot;,
+      y = &quot;Vehicle Class&quot;) + 
+   theme_tq() + 
+   theme(
+      panel.grid.minor = element_blank(),
+      panel.grid.major.x = element_blank(),
+      panel.grid.major.y = element_blank(),
+      axis.ticks = element_blank(),
+      panel.border = element_blank()
+   )</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>

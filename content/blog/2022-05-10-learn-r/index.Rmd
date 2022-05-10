@@ -1,0 +1,51 @@
+---
+title: learn R
+author: ''
+date: '2022-05-10'
+slug: []
+categories: []
+tags: []
+---
+
+```{r}
+library(pacman)
+p_load(tidyverse,ggalt,tidyquant)
+# 数据准备
+mpg_by_class_tbl <- mpg %>% 
+   group_by(class) %>% 
+   summarise(mean_hwy = mean(hwy,na.rm = TRUE)) %>% 
+   mutate(class = fct_reorder(class, mean_hwy))
+# 数据可视化
+g1 <- mpg_by_class_tbl %>% 
+   ggplot(aes(x=mean_hwy, y=class)) +
+   geom_lollipop(
+      horizontal = TRUE,
+      point.colour = 'dodgerblue',
+      point.size = 10,
+      color = '#2c3e50',
+      size = 1
+   )
+g1 + geom_label(
+      aes(label = str_glue("Vehicle Class: {toupper(class)}
+                     mpg: {round(mean_hwy)}")),
+      size = 3,
+      hjust = 'outward',
+      nudge_x = 2) + 
+   expand_limits(x = 45) + 
+   labs(
+      title = "Vehicle Flue Economy lollipop Plot",
+      x = "Fuel Economy (MPG)",
+      y = "Vehicle Class") + 
+   theme_tq() + 
+   theme(
+      panel.grid.minor = element_blank(),
+      panel.grid.major.x = element_blank(),
+      panel.grid.major.y = element_blank(),
+      axis.ticks = element_blank(),
+      panel.border = element_blank()
+   )
+```
+
+
+
+
